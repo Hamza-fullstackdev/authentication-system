@@ -1,0 +1,14 @@
+{
+  "name": "authentication-system",
+  "version": "1.0.0",
+  "description": "A Complete Authentication System Build With Strong Security Features",
+  "main": "index.js",
+  "scripts": {
+    "start": "node api/index.js"
+  },
+  "keywords": [
+    "auth"
+  ],
+  "author": "Hamza",
+  "license": "ISC"
+}
