@@ -19,11 +19,15 @@ const Home = () => {
           Web <span className='text-white'>Authenticator</span>
         </h1>
         <p className='mt-3 text-white font-semibold text-lg capitalize'>
-          Secure your account with <span className='text-green-400'>Google, GitHub, or a Passkey</span>—your choice,
-          your security!
+          Secure your account with{" "}
+          <span className='text-green-400'>Google, GitHub, or a Passkey</span>
+          —your choice, your security!
         </p>
         <p className='mt-2 text-white text-md capitalize'>
-        Our web authentication app, crafted with the robust MERN stack, ensures maximum security and flexibility. Whether you prefer Google sign-up, GitHub forms, or cutting-edge passkey authentication, your data is protected with the best modern tools.
+          Our web authentication app, crafted with the robust MERN stack,
+          ensures maximum security and flexibility. Whether you prefer Google
+          sign-up, GitHub forms, or cutting-edge passkey authentication, your
+          data is protected with the best modern tools.
         </p>
       </div>
     </div>
