@@ -1,10 +1,10 @@
 import express from "express";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import connection from "./config/connection.config.js";
-dotenv.config();
+import { config } from "./utils/config.utils.js";
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.PORT;
 connection();
 
 app.use(express.json());
