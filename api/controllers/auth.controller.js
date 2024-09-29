@@ -3,6 +3,8 @@ import User from "../models/user.model.js";
 import isValidEmail from "../utils/checkemail.utils.js";
 import containsOnlyNumbers from "../utils/checkphone.utils.js";
 import hashedPassword from "../utils/hashedpasswords.utils.js";
+import { config } from "../utils/config.utils.js";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res, next) => {
   const { fname, lname, email, password, phone, country } = req.body;
@@ -47,6 +49,40 @@ export const register = async (req, res, next) => {
     res
       .status(201)
       .json({ status: 201, message: "User registered successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    const isUserExist = await User.findOne({ email: req.body.email });
+    if (isUserExist) {
+      const token = jwt.sign({ id: isUserExist._id }, config.JWT_TOKEN);
+      const { password: pass, ...rest } = isUserExist._doc;
+      res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        fname: req.body.fname,
+        lname: req.body.lname,
+        country: req.body.country,
+        phone: req.body.phone,
+        email: req.body.email,
+        password: generatedPassword,
+        role: "user",
+      });
+      try {
+        await newUser.save();
+        const token = jwt.sign({ id: newUser._id }, config.JWT_TOKEN);
+        const { password: pass, ...rest } = newUser._doc;
+        res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+      } catch (error) {
+        next(error);
+      }
+    }
   } catch (error) {
     next(error);
   }
