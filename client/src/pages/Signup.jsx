@@ -2,8 +2,8 @@ import React from "react";
 
 const Signup = () => {
   return (
-    <div className='my-28 flex items-center justify-center'>
-      <div className='min-w-[380px] max-w-[600px] shadow-lg p-2 sm:p-4 border-t-4 border-green-400 rounded-md'>
+    <div className='my-20 flex items-center justify-center'>
+      <div className='min-w-[380px] max-w-[600px] shadow-lg px-2 py-2 sm:px-4 sm:py-8 border-t-4 border-green-400 rounded-md'>
         <h2 className='text-green-400 font-bold tracking-wide text-2xl text-center'>
           Web <span className='text-black'>Authenticator</span>
         </h2>
