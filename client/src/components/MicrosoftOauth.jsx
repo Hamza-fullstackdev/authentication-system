@@ -65,10 +65,10 @@ const MicrosoftOauth = () => {
         <a className='flex gap-5 items-center justify-center'>
           <img
             src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUqBzOiCcReNkfn1AwiPKmRbDvjLjMPMo9lw&s'
-            alt='Google'
+            alt='Microsoft Azure Web Services'
             className='w-4 h-4 mr-2'
           />
-          <span className='text-sm'>Sign Up with Microsoft</span>
+          <span className='text-sm'>Continue with Microsoft</span>
         </a>
       </button>
     </div>

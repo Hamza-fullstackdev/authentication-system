@@ -68,10 +68,10 @@ const GithubOauth = () => {
         <a className='flex gap-5 items-center justify-center'>
           <img
             src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5i4JeVcOzQvFkVuMlN7RM62s298ar3Qv_vw&s'
-            alt='Google'
+            alt='Github'
             className='w-10 h-6 mr-2'
           />
-          <span className='text-sm'>Sign Up with Github</span>
+          <span className='text-sm'>Continue with Github</span>
         </a>
       </button>
     </div>

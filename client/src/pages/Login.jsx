@@ -3,6 +3,7 @@ import GoogleOauth from "../components/GoogleOauth";
 import GithubOauth from "../components/GithubOauth";
 import MicrosoftOauth from "../components/MicrosoftOauth";
 import { useNavigate } from "react-router-dom";
+import FacebookOauth from "../components/FacebookOauth";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
@@ -23,12 +24,13 @@ const Login = () => {
         },
         body: JSON.stringify(formData),
       });
-      await res.json();
+      const result = await res.json();
+      console.log(result);
       if (res.ok) {
         navigate("/");
       } else {
         setError(true);
-        setErrorMessage(res.statusText);
+        setErrorMessage(result.message);
         setLoading(false);
       }
     } catch (error) {
@@ -120,7 +122,7 @@ const Login = () => {
                       <span>Loading...</span>
                     </div>
                   ) : (
-                    "Sign up"
+                    "Login"
                   )}
                 </button>
                 <p className='mt-2 text-sm'>
@@ -138,6 +140,9 @@ const Login = () => {
               </div>
               <div className='mt-3'>
                 <GithubOauth />
+              </div>
+              <div className='mt-3'>
+                <FacebookOauth />
               </div>
             </form>
           </div>

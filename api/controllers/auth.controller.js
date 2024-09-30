@@ -5,6 +5,7 @@ import containsOnlyNumbers from "../utils/checkphone.utils.js";
 import hashedPassword from "../utils/hashedpasswords.utils.js";
 import { config } from "../utils/config.utils.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 export const register = async (req, res, next) => {
   const { fname, lname, email, password, phone, country } = req.body;
@@ -60,7 +61,7 @@ export const googleAuth = async (req, res, next) => {
     const checkAccessToken = await User.findOne({
       access_token: req.body.access_token,
     });
-    if (isUserExist && checkAccessToken) {
+    if (isUserExist || checkAccessToken) {
       const token = jwt.sign({ id: isUserExist._id }, config.JWT_TOKEN);
       const { password: pass, ...rest } = isUserExist._doc;
       res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
@@ -135,7 +136,7 @@ export const microsoftAuth = async (req, res, next) => {
     const checkAccessToken = await User.findOne({
       access_token: req.body.access_token,
     });
-    if (isUserExist && checkAccessToken) {
+    if (isUserExist || checkAccessToken) {
       const token = jwt.sign({ id: isUserExist._id }, config.JWT_TOKEN);
       const { password: pass, ...rest } = isUserExist._doc;
       res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
@@ -161,6 +162,69 @@ export const microsoftAuth = async (req, res, next) => {
       } catch (error) {
         next(error);
       }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const facebookAuth = async (req, res, next) => {
+  try {
+    const isUserExist = await User.findOne({ email: req.body.email });
+    const checkAccessToken = await User.findOne({
+      access_token: req.body.access_token,
+    });
+    if (isUserExist || checkAccessToken) {
+      const token = jwt.sign({ id: isUserExist._id }, config.JWT_TOKEN);
+      const { password: pass, ...rest } = isUserExist._doc;
+      res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        fname: req.body.fname,
+        lname: req.body.lname,
+        country: req.body.country,
+        phone: req.body.phone,
+        email: req.body.email,
+        password: generatedPassword,
+        access_token: req.body.access_token,
+        role: "user",
+      });
+      try {
+        await newUser.save();
+        const token = jwt.sign({ id: newUser._id }, config.JWT_TOKEN);
+        const { password: pass, ...rest } = newUser._doc;
+        res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+      } catch (error) {
+        next(error);
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email) return next(errorHandler(403, "Email field is required"));
+  if (!password) return next(errorHandler(403, "Password field is required"));
+  try {
+    const user = await User.findOne({ email });
+    if (!user)
+      return next(
+        errorHandler(403, "Invalid credentials, try with different email")
+      );
+    const decryptPassword = bcrypt.compareSync(password, user.password);
+    if (!decryptPassword) return next(errorHandler(403, "Wrong Credentials"));
+    if (user) {
+      const token = jwt.sign(
+        { id: user._id},
+        config.JWT_TOKEN
+      );
+      const { password: pass, ...rest } = user._doc;
+      res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
     }
   } catch (error) {
     next(error);

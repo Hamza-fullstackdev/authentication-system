@@ -3,6 +3,7 @@ import GoogleOauth from "../components/GoogleOauth";
 import { useNavigate } from "react-router-dom";
 import GithubOauth from "../components/GithubOauth";
 import MicrosoftOauth from "../components/MicrosoftOauth";
+import FacebookOauth from "../components/FacebookOauth";
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
@@ -219,6 +220,9 @@ const Signup = () => {
               </div>
               <div className='mt-3'>
                <GithubOauth/>
+              </div>
+              <div className='mt-3'>
+               <FacebookOauth/>
               </div>
             </form>
           </div>
