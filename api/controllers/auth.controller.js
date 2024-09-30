@@ -87,3 +87,30 @@ export const googleAuth = async (req, res, next) => {
     next(error);
   }
 };
+
+export const githubAuth = async (req, res, next) => {
+  try {
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+    const newUser = new User({
+      fname: req.body.fname,
+      lname: req.body.lname,
+      country: req.body.country,
+      phone: req.body.phone,
+      email: req.body.email,
+      password: generatedPassword,
+      role: "user",
+    });
+    try {
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, config.JWT_TOKEN);
+      const { password: pass, ...rest } = newUser._doc;
+      res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+    } catch (error) {
+      next(error);
+    }
+  } catch (error) {
+    next(error);
+  }
+};

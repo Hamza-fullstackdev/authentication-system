@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import GoogleOauth from "../components/GoogleOauth";
 import { useNavigate } from "react-router-dom";
+import GithubOauth from "../components/GithubOauth";
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
@@ -213,19 +214,7 @@ const Signup = () => {
                 <GoogleOauth />
               </div>
               <div className='mt-3'>
-                <button className='w-full border border-gray-300 px-3 py-2'>
-                  <a
-                    href='/'
-                    className='flex gap-5 items-center justify-center'
-                  >
-                    <img
-                      src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5i4JeVcOzQvFkVuMlN7RM62s298ar3Qv_vw&s'
-                      alt='Google'
-                      className='w-10 h-6 mr-2'
-                    />
-                    <span className='text-sm'>Sign Up with Github</span>
-                  </a>
-                </button>
+               <GithubOauth/>
               </div>
             </form>
           </div>
