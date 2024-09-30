@@ -28,6 +28,9 @@ const userScheama = new mongoose.Schema({
     minlength: 8,
     maxlength: 255,
   },
+  access_token:{
+    type: String,
+  },
   role: {
     type: String,
     default: "user",

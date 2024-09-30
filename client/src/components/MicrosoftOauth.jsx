@@ -1,22 +1,26 @@
 import React, { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
+import { signInWithPopup, getAuth, OAuthProvider } from "firebase/auth";
 import { app } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 
-const GoogleOauth = () => {
-  const auth = getAuth(app);
+const MicrosoftOauth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const handleGoogleOauth = async () => {
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
+
+  const auth = getAuth(app);
+  const microsoftProvider = new OAuthProvider("microsoft.com");
+  const handleMicrosoftOauth = async () => {
     try {
       setLoading(true);
-      const result = await signInWithPopup(auth, provider);
+      microsoftProvider.setCustomParameters({
+        prompt: "consent",
+      });
+      const result = await signInWithPopup(auth, microsoftProvider);
+      console.log(result);
       const username = result.user.displayName.split(" ");
-      const res = await fetch("/api/auth/google-auth", {
+      const res = await fetch("/api/auth/microsoft-auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,21 +33,21 @@ const GoogleOauth = () => {
           access_token: result.user.accessToken,
         }),
       });
-      setLoading(false);
-      const data = await res.json();
+      setLoading(true);
+      await res.json();
       if (res.ok) {
         navigate("/");
       } else {
         setError(true);
-        setErrorMessage("Error occure while signing in, Try again later");
+        setErrorMessage("Error occurr while Signup process, Try again later!");
       }
     } catch (error) {
       setError(true);
-      setErrorMessage(error);
+      setErrorMessage(error.message);
     }
   };
   return (
-    <>
+    <div>
       {error && (
         <div
           className='p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 fixed top-5 right-5 max-w-[400px]'
@@ -54,20 +58,20 @@ const GoogleOauth = () => {
       )}
       <button
         className='w-full border border-gray-300 px-3 py-2'
-        onClick={handleGoogleOauth}
+        onClick={handleMicrosoftOauth}
         disabled={loading}
       >
         <a className='flex gap-5 items-center justify-center'>
           <img
-            src='https://img.icons8.com/color/48/000000/google-logo.png'
+            src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUqBzOiCcReNkfn1AwiPKmRbDvjLjMPMo9lw&s'
             alt='Google'
-            className='w-6 h-6 mr-2'
+            className='w-4 h-4 mr-2'
           />
-          <span className='text-sm'>Sign Up with Google</span>
+          <span className='text-sm'>Sign Up with Microsoft</span>
         </a>
       </button>
-    </>
+    </div>
   );
 };
 
-export default GoogleOauth;
+export default MicrosoftOauth;

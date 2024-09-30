@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { GithubAuthProvider,signOut, signInWithPopup, getAuth } from "firebase/auth";
+import {
+  GithubAuthProvider,
+  signOut,
+  signInWithPopup,
+  getAuth,
+} from "firebase/auth";
 import { app } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +33,7 @@ const GithubOauth = () => {
           lname: username[1],
           email: result.user.email || "signupwithgithub@gmail.com",
           phone: result.user.phoneNumber || 11111111,
+          access_token: result.user.accessToken,
         }),
       });
       setLoading(true);

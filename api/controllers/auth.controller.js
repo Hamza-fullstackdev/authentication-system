@@ -72,6 +72,7 @@ export const googleAuth = async (req, res, next) => {
         phone: req.body.phone,
         email: req.body.email,
         password: generatedPassword,
+        access_token: req.body.access_token,
         role: "user",
       });
       try {
@@ -100,6 +101,7 @@ export const githubAuth = async (req, res, next) => {
       phone: req.body.phone,
       email: req.body.email,
       password: generatedPassword,
+      access_token: req.body.access_token,
       role: "user",
     });
     try {
@@ -109,6 +111,41 @@ export const githubAuth = async (req, res, next) => {
       res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
     } catch (error) {
       next(error);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const microsoftAuth = async (req, res, next) => {
+  try {
+    const isUserExist = await User.findOne({ email: req.body.email });
+    if (isUserExist) {
+      const token = jwt.sign({ id: isUserExist._id }, config.JWT_TOKEN);
+      const { password: pass, ...rest } = isUserExist._doc;
+      res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        fname: req.body.fname,
+        lname: req.body.lname,
+        country: req.body.country,
+        phone: req.body.phone,
+        email: req.body.email,
+        password: generatedPassword,
+        access_token: req.body.access_token,
+        role: "user",
+      });
+      try {
+        await newUser.save();
+        const token = jwt.sign({ id: newUser._id }, config.JWT_TOKEN);
+        const { password: pass, ...rest } = newUser._doc;
+        res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
+      } catch (error) {
+        next(error);
+      }
     }
   } catch (error) {
     next(error);
