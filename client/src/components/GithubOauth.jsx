@@ -21,7 +21,6 @@ const GithubOauth = () => {
       setLoading(true);
       await signOut(auth);
       const result = await signInWithPopup(auth, githubProvider);
-      console.log(result);
       const username = result.user.displayName.split(" ");
       const res = await fetch("/api/auth/github-auth", {
         method: "POST",
@@ -43,10 +42,12 @@ const GithubOauth = () => {
       } else {
         setError(true);
         setErrorMessage("Error occurr while Signup process, Try again later!");
+        setLoading(false);
       }
     } catch (error) {
       setError(true);
       setErrorMessage(error.message);
+      setLoading(false);
     }
   };
   return (

@@ -36,10 +36,12 @@ const GoogleOauth = () => {
       } else {
         setError(true);
         setErrorMessage("Error occure while signing in, Try again later");
+        setLoading(false);
       }
     } catch (error) {
       setError(true);
       setErrorMessage(error);
+      setLoading(false);
     }
   };
   return (

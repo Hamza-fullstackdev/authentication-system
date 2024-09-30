@@ -18,7 +18,6 @@ const MicrosoftOauth = () => {
         prompt: "consent",
       });
       const result = await signInWithPopup(auth, microsoftProvider);
-      console.log(result);
       const username = result.user.displayName.split(" ");
       const res = await fetch("/api/auth/microsoft-auth", {
         method: "POST",
@@ -40,10 +39,12 @@ const MicrosoftOauth = () => {
       } else {
         setError(true);
         setErrorMessage("Error occurr while Signup process, Try again later!");
+        setLoading(false);
       }
     } catch (error) {
       setError(true);
       setErrorMessage(error.message);
+      setLoading(false);
     }
   };
   return (
