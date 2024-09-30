@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import GoogleOauth from "../components/GoogleOauth";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState(false);
   const [errorMessages, setErrorMessages] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (errors) {
@@ -33,7 +36,7 @@ const Signup = () => {
       const result = await res.json();
       setLoading(false);
       if (res.ok) {
-        console.log(result);
+        navigate("/login");
       }
       if (!res.ok) {
         setErrors(true);
@@ -207,19 +210,7 @@ const Signup = () => {
                 </p>
               </div>
               <div className='mt-5'>
-                <button className='w-full border border-gray-300 px-3 py-2'>
-                  <a
-                    href='/'
-                    className='flex gap-5 items-center justify-center'
-                  >
-                    <img
-                      src='https://img.icons8.com/color/48/000000/google-logo.png'
-                      alt='Google'
-                      className='w-6 h-6 mr-2'
-                    />
-                    <span className='text-sm'>Sign Up with Google</span>
-                  </a>
-                </button>
+                <GoogleOauth />
               </div>
               <div className='mt-3'>
                 <button className='w-full border border-gray-300 px-3 py-2'>
