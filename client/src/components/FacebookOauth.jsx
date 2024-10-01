@@ -41,7 +41,7 @@ const FacebookOauth = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        dispatch(signInSuccess(data.user));
+        dispatch(signInSuccess(data));
         navigate("/profile");
       } else {
         setError(true);
