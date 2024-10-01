@@ -117,6 +117,7 @@ const Signup = () => {
                     id='phone'
                     name='phone'
                     required
+                    autoComplete="on"
                     onChange={handleFormData}
                   />
                 </div>
@@ -133,6 +134,7 @@ const Signup = () => {
                     placeholder='Country'
                     id='country'
                     name='country'
+                    autoComplete="on"
                     required
                     onChange={handleFormData}
                   />
@@ -151,6 +153,7 @@ const Signup = () => {
                     id='email'
                     name='email'
                     required
+                    autoComplete="on"
                     onChange={handleFormData}
                   />
                 </div>

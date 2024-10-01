@@ -219,10 +219,7 @@ export const login = async (req, res, next) => {
     const decryptPassword = bcrypt.compareSync(password, user.password);
     if (!decryptPassword) return next(errorHandler(403, "Wrong Credentials"));
     if (user) {
-      const token = jwt.sign(
-        { id: user._id},
-        config.JWT_TOKEN
-      );
+      const token = jwt.sign({ id: user._id }, config.JWT_TOKEN);
       const { password: pass, ...rest } = user._doc;
       res.cookie(config.AUTH_COOKIE, token).status(200).json(rest);
     }

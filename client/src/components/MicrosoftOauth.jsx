@@ -28,7 +28,7 @@ const MicrosoftOauth = () => {
           fname: username[0],
           lname: username[1],
           email: result.user.email,
-          phone: result.user.phoneNumber || 11111111,
+          phone: result.user.phoneNumber,
           access_token: result.user.accessToken,
         }),
       });

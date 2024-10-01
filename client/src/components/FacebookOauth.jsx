@@ -27,8 +27,8 @@ const FacebookOauth = () => {
         body: JSON.stringify({
           fname: username[0],
           lname: username[1],
-          email: result.user.email || "facebook@gmail.com",
-          phone: result.user.phoneNumber || 11111111,
+          email: result.user.email,
+          phone: result.user.phoneNumber,
           access_token: result.user.accessToken,
         }),
       });

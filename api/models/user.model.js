@@ -11,7 +11,6 @@ const userScheama = new mongoose.Schema({
   },
   phone: {
     type: Number,
-    required: true,
     unique: true,
   },
   country: {
@@ -19,7 +18,6 @@ const userScheama = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
     unique: true,
   },
   password: {
