@@ -2,18 +2,24 @@ import React, { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const GoogleOauth = () => {
   const auth = getAuth(app);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const handleGoogleOauth = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const result = await signInWithPopup(auth, provider);
       const username = result.user.displayName.split(" ");
       const res = await fetch("/api/auth/google-auth", {
@@ -26,22 +32,21 @@ const GoogleOauth = () => {
           lname: username[1],
           email: result.user.email,
           phone: result.user.phoneNumber,
+          avatar: result.user.photoURL,
           access_token: result.user.accessToken,
         }),
       });
-      setLoading(false);
       const data = await res.json();
       if (res.ok) {
-        navigate("/");
+        dispatch(signInSuccess(data));
+        navigate("/profile");
       } else {
         setError(true);
-        setErrorMessage("Error occure while signing in, Try again later");
-        setLoading(false);
+        dispatch(signInFailure(data.message));
       }
     } catch (error) {
       setError(true);
-      setErrorMessage(error);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
   return (

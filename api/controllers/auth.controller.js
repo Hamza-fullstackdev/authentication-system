@@ -76,6 +76,7 @@ export const googleAuth = async (req, res, next) => {
         phone: req.body.phone,
         email: req.body.email,
         password: generatedPassword,
+        avatar: req.body.avatar,
         access_token: req.body.access_token,
         role: "user",
       });
@@ -112,6 +113,7 @@ export const githubAuth = async (req, res, next) => {
         country: req.body.country,
         phone: req.body.phone,
         email: req.body.email,
+        avatar: req.body.avatar,
         password: generatedPassword,
         access_token: req.body.access_token,
         role: "user",
@@ -151,6 +153,7 @@ export const microsoftAuth = async (req, res, next) => {
         phone: req.body.phone,
         email: req.body.email,
         password: generatedPassword,
+        avatar: req.body.avatar,
         access_token: req.body.access_token,
         role: "user",
       });
@@ -189,6 +192,7 @@ export const facebookAuth = async (req, res, next) => {
         phone: req.body.phone,
         email: req.body.email,
         password: generatedPassword,
+        avatar: req.body.avatar,
         access_token: req.body.access_token,
         role: "user",
       });

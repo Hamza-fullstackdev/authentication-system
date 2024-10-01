@@ -7,18 +7,24 @@ import {
 } from "firebase/auth";
 import { app } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const GithubOauth = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const auth = getAuth(app);
   const githubProvider = new GithubAuthProvider();
   const handleGithubOauth = async () => {
     try {
-      setLoading(true);
+      dispatch(signInStart());
       await signOut(auth);
       const result = await signInWithPopup(auth, githubProvider);
       const username = result.user.displayName.split(" ");
@@ -32,22 +38,21 @@ const GithubOauth = () => {
           lname: username[1],
           email: result.user.email,
           phone: result.user.phoneNumber,
+          avatar: result.user.photoURL,
           access_token: result.user.accessToken,
         }),
       });
-      setLoading(true);
       const data = await res.json();
       if (res.ok) {
-        navigate("/");
+        dispatch(signInSuccess(data));
+        navigate("/profile");
       } else {
         setError(true);
-        setErrorMessage("Error occurr while Signup process, Try again later!");
-        setLoading(false);
+        dispatch(signInFailure(error.message));
       }
     } catch (error) {
       setError(true);
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
   return (

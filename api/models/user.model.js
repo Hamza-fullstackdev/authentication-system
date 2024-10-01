@@ -26,6 +26,10 @@ const userScheama = new mongoose.Schema({
     minlength: 8,
     maxlength: 255,
   },
+  avatar:{
+    type: String,
+    default: 'https://pics.craiyon.com/2023-11-26/oMNPpACzTtO5OVERUZwh3Q.webp'
+  },
   access_token:{
     type: String,
   },

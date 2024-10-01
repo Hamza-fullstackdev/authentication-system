@@ -117,7 +117,7 @@ const Signup = () => {
                     id='phone'
                     name='phone'
                     required
-                    autoComplete="on"
+                    autoComplete='on'
                     onChange={handleFormData}
                   />
                 </div>
@@ -134,7 +134,7 @@ const Signup = () => {
                     placeholder='Country'
                     id='country'
                     name='country'
-                    autoComplete="on"
+                    autoComplete='on'
                     required
                     onChange={handleFormData}
                   />
@@ -153,7 +153,7 @@ const Signup = () => {
                     id='email'
                     name='email'
                     required
-                    autoComplete="on"
+                    autoComplete='on'
                     onChange={handleFormData}
                   />
                 </div>
@@ -188,7 +188,7 @@ const Signup = () => {
                     >
                       <svg
                         aria-hidden='true'
-                        class='w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600'
+                        className='w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600'
                         viewBox='0 0 100 101'
                         fill='none'
                         xmlns='https://www.w3.org/2000/svg'
@@ -219,13 +219,13 @@ const Signup = () => {
                 <GoogleOauth />
               </div>
               <div className='mt-3'>
-                <MicrosoftOauth/>
+                <MicrosoftOauth />
               </div>
               <div className='mt-3'>
-               <GithubOauth/>
+                <GithubOauth />
               </div>
               <div className='mt-3'>
-               <FacebookOauth/>
+                <FacebookOauth />
               </div>
             </form>
           </div>

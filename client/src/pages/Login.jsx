@@ -4,19 +4,26 @@ import GithubOauth from "../components/GithubOauth";
 import MicrosoftOauth from "../components/MicrosoftOauth";
 import { useNavigate } from "react-router-dom";
 import FacebookOauth from "../components/FacebookOauth";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const handleOnchange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   const handleFormData = async (e) => {
     e.preventDefault();
     try {
+      dispatch(signInStart());
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -25,18 +32,16 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
       const result = await res.json();
-      console.log(result);
       if (res.ok) {
-        navigate("/");
+        dispatch(signInSuccess(result));
+        navigate("/profile");
       } else {
         setError(true);
-        setErrorMessage(result.message);
-        setLoading(false);
+        dispatch(signInFailure(result.message));
       }
     } catch (error) {
       setError(true);
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
@@ -105,7 +110,7 @@ const Login = () => {
                     >
                       <svg
                         aria-hidden='true'
-                        class='w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600'
+                        className='w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600'
                         viewBox='0 0 100 101'
                         fill='none'
                         xmlns='https://www.w3.org/2000/svg'

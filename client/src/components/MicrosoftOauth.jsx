@@ -2,18 +2,23 @@ import React, { useState } from "react";
 import { signInWithPopup, getAuth, OAuthProvider } from "firebase/auth";
 import { app } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const MicrosoftOauth = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const auth = getAuth(app);
   const microsoftProvider = new OAuthProvider("microsoft.com");
   const handleMicrosoftOauth = async () => {
     try {
-      setLoading(true);
+      dispatch(signInStart());
       microsoftProvider.setCustomParameters({
         prompt: "consent",
       });
@@ -29,22 +34,21 @@ const MicrosoftOauth = () => {
           lname: username[1],
           email: result.user.email,
           phone: result.user.phoneNumber,
+          avatar: result.user.photoURL,
           access_token: result.user.accessToken,
         }),
       });
-      setLoading(true);
-      await res.json();
+      const data = await res.json();
       if (res.ok) {
-        navigate("/");
+        dispatch(signInSuccess(data));
+        navigate("/profile");
       } else {
         setError(true);
-        setErrorMessage("Error occurr while Signup process, Try again later!");
-        setLoading(false);
+        dispatch(signInFailure(data.message));
       }
     } catch (error) {
       setError(true);
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
   return (

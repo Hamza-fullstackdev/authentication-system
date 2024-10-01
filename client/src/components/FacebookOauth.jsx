@@ -2,18 +2,24 @@ import React, { useState } from "react";
 import { FacebookAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const FacebookOauth = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
 
   const auth = getAuth(app);
   const facebookProvider = new FacebookAuthProvider();
   const handleFacebookOauth = async () => {
     try {
-      setLoading(true);
+      dispatch(signInStart);
       facebookProvider.setCustomParameters({
         display: "popup",
       });
@@ -29,22 +35,21 @@ const FacebookOauth = () => {
           lname: username[1],
           email: result.user.email,
           phone: result.user.phoneNumber,
+          avatar: result.user.photoURL,
           access_token: result.user.accessToken,
         }),
       });
-      setLoading(true);
       const data = await res.json();
       if (res.ok) {
-        navigate("/");
+        dispatch(signInSuccess(data.user));
+        navigate("/profile");
       } else {
         setError(true);
-        setErrorMessage("Error occurr while Signup process, Try again later!");
-        setLoading(false);
+        dispatch(signInFailure(data.message));
       }
     } catch (error) {
       setError(true);
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
